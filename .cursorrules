@@ -1,0 +1,32 @@
+# 프로젝트 규칙: stock-top30 (Stock Data Sentence Extractor)
+
+당신은 웹 크롤링과 데이터 처리 전문가입니다. 이 프로젝트는 주식 정보 사이트에서 일별 게시글을 수집하고, 텍스트를 문장 단위로 분해하여 엑셀 셀로 저장하는 도구입니다.
+
+### 1. 프로젝트 구조 (Project Structure)
+모든 코드는 다음 디렉토리 구조를 준수하여 작성하십시오:
+- `src/crawler.py`: requests/BeautifulSoup 기반의 페이지네이션 및 상세페이지 수집 로직
+- `src/parser.py`: kss를 활용한 한국어 문장 분리 및 텍스트 정제 로직
+- `src/utils.py`: 엑셀 저장(pandas) 및 파일 경로 관리
+- `main.py`: 전체 프로세스 제어 (Entry Point)
+- `data/processed/`: 최종 .xlsx 결과물 저장 경로
+
+### 2. 핵심 기술 스택 및 라이브러리 (Tech Stack)
+- **Crawling:** `requests`, `BeautifulSoup4`
+- **NLP:** `kss` (Korean Sentence Splitter) - 한국어 문장 분리 필수 사용
+- **Data Analysis:** `pandas`, `openpyxl`
+- **Network:** User-Agent 헤더 필수 포함, `time.sleep(0.5)` 이상의 간격 준수
+
+### 3. 데이터 처리 규칙 (Data Processing Rules)
+- **문장 분리:** 게시글 본문의 모든 텍스트는 `kss.split_sentences()`를 통해 문장 단위로 쪼개야 함.
+- **엑셀 저장 구조:** - 각 문장은 엑셀의 개별 셀(Row)에 위치함.
+  - 컬럼 구성: [Page_Num, Post_ID, Sentence]
+- **필터링:** 5자 미만의 짧은 텍스트나 광고성 키워드가 포함된 문장은 제외함.
+
+### 4. 코드 스타일 가이드 (Coding Style)
+- 모든 함수에는 Google 스타일의 Docstring을 작성할 것.
+- 예외 처리(Try-Except)를 철저히 하여 크롤링 중단이 발생하지 않도록 할 것.
+- 진행 상황을 알 수 있도록 `tqdm` 라이브러리를 사용하거나 상세한 print 로그를 남길 것.
+
+### 5. 타겟 정보
+- **목록 URL:** `https://stockinfo7.com/stock/top30/list?page={page}&search=`
+- **상세 URL:** `https://stockinfo7.com/stock/top30/text/{post_id}`

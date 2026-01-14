@@ -1,0 +1,8 @@
+# 크롤링/처리 설정 (예시)
+base_url: "https://example.com"
+headers:
+  User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+pages:
+  start: 1
+  end: 3
+
