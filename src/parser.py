@@ -3,11 +3,11 @@ import re
 def parse_stock_text(raw_text):
     results = []
     
-    # 1. 날짜 추출 (기존 로직 유지)
+    # 날짜 추출 (기존 로직 유지)
     date_match = re.search(r'(\d{4}년 \d{1,2}월 \d{1,2}일)', raw_text)
     post_date = date_match.group(1) if date_match else "날짜 미상"
 
-    # 2. 핵심 로직: 엄격한 종목 시작 패턴 정의
+    # 엄격한 종목 시작 패턴 정의
     # (\d+)\. : 숫자와 마침표로 시작하고
     # \s{1} : 반드시 정확히 공백 '한 칸'이 있어야 하며
     # (?=[가-힣A-Z]) : 그 공백 바로 뒤에는 한글 또는 영문 대문자가 와야 함

@@ -15,7 +15,6 @@ class StockCrawler:
         response = requests.get(list_url, headers=self.headers)
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # 상세 페이지 링크 추출 (/stock/top30/text/1593 등)
         links = soup.select('a[href*="/stock/top30/text/"]')
         post_ids = list(
             {
@@ -34,6 +33,5 @@ class StockCrawler:
             return ""
             
         soup = BeautifulSoup(response.text, 'html.parser')
-        # 요구: div.white 내부 텍스트만 추출
         content_area = soup.select_one("div.white")
         return content_area.get_text(separator=" ", strip=True) if content_area else ""
