@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import time
-from src.parser import split_into_sentences
 
 class StockCrawler:
     def __init__(self):
@@ -35,8 +34,6 @@ class StockCrawler:
             return ""
             
         soup = BeautifulSoup(response.text, 'html.parser')
-        # 사이트 구조에 맞춰 본문 영역 지정 (일반적으로 article 혹은 특정 class)
-        content_area = soup.find("div", class_="content") or soup.body
-        if content_area is None:
-            return ""
-        return content_area.get_text(separator=" ", strip=True)
+        # 요구: div.white 내부 텍스트만 추출
+        content_area = soup.select_one("div.white")
+        return content_area.get_text(separator=" ", strip=True) if content_area else ""
