@@ -3,31 +3,27 @@ import pandas as pd
 import re
 
 def save_to_excel(data, filename):
-    """
-    수집된 데이터를 날짜별로 시트를 나누어 data/processed/ 폴더에 저장합니다.
-    """
-    output_dir = "data/processed"
+    # 현재 작업 디렉토리 기준 절대 경로 생성
+    base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    output_dir = os.path.join(base_path, "data", "processed")
+    
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-        
+
     filepath = os.path.join(output_dir, filename)
-    
-    # 리스트 데이터를 데이터프레임으로 변환
     df = pd.DataFrame(data)
-    
+
+    print(f"\n[디버깅] 총 {len(df)}개의 행을 저장 시도 중...")
+
     if df.empty:
-        print("[Warning] 저장할 데이터가 없습니다.")
+        print("[경고] 저장할 데이터가 전혀 없습니다. 파싱 단계를 점검하세요.")
         return
 
-    # 날짜별로 그룹화하여 시트 분리 저장
-    with pd.ExcelWriter(filepath, engine='openpyxl') as writer:
-        # '날짜' 컬럼을 기준으로 그룹핑
-        groups = df.groupby('날짜')
-        
-        for date, group in groups:
-            # 엑셀 시트 이름에 사용할 수 없는 문자 제거 및 길이 제한(31자)
-            sheet_name = re.sub(r'[\/:*?"<>|]', '', str(date))[:31]
-            # 인덱스를 제외하고 시트별로 저장
-            group.to_excel(writer, sheet_name=sheet_name, index=False)
-            
-    print(f"\n[Success] 날짜별 시트 분리 저장 완료: {filepath}")
+    try:
+        with pd.ExcelWriter(filepath, engine='openpyxl') as writer:
+            for date, group in df.groupby('날짜'):
+                clean_date = re.sub(r'[\\/*?:\[\]]', '', str(date))[:31]
+                group.to_excel(writer, sheet_name=clean_date, index=False)
+        print(f"✅ 파일 저장 완료: {filepath}")
+    except Exception as e:
+        print(f"❌ 엑셀 저장 실패: {e}")
