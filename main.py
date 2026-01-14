@@ -18,6 +18,7 @@ def run_project(start_page, end_page):
             # 정규식을 이용해 구조화된 데이터(날짜, 종목, 폭, 사유) 추출
             stock_items = parse_stock_text(raw_text)
             final_data.extend(stock_items)
+            print(f"현재까지 {len(final_data)}개 수집됨")
             
             time.sleep(0.5)
 
